@@ -27,8 +27,8 @@ import { usePathname } from "next/navigation";
 
 const items = [
   { title: "Home", url: "/", icon: Home },
-  { title: "Users", url: "/dashboard/users", icon: User },
-  { title: "Students", url: "/dashboard/students", icon: GraduationCap },
+  { title: "Users", url: "/admin/users", icon: User },
+  { title: "Students", url: "/admin/students", icon: GraduationCap },
   { title: "Teachers", url: "/admin/teachers", icon: UserCheck },
   { title: "Parents", url: "/admin/parents", icon: UserPlus },
   { title: "Grades", url: "/admin/grades", icon: BookOpen },

@@ -12,3 +12,78 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+enum Role {
+  ADMIN
+  MODERATOR
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String   @unique
+  role      Role     
+  sex       Sex
+  active    Boolean  @default(false)
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  student   Student?
+  teacher   Teacher?
+  parent    Parent?
+
+  @@map("users")
+  @@index([role])
+}
+
+model Student {
+  id        String           @id @default(cuid())
+  userId    String           @unique
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  grade     String?
+  parents   ParentStudent[]
+
+  @@index([userId])
+  @@map("students")
+}
+
+model Teacher {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("teachers")
+}
+
+model Parent {
+  id        String           @id @default(cuid())
+  userId    String           @unique
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  children  ParentStudent[]
+  @@map("parents")
+}
+
+model ParentStudent {
+  id           String   @id @default(cuid())
+  parentId     String
+  parent       Parent   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  studentId    String
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  relationship String
+  createdAt    DateTime @default(now())
+  
+  @@unique([parentId, studentId])
+  @@map("parent_student")
+}
