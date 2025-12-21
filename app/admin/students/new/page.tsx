@@ -1,29 +1,20 @@
-// import { StudentForm } from "../_components/StudentForm";
-
-// const newStudent = () => {
-//   return (
-//     <div className="mx-auto max-w-1/3 flex flex-col gap-4">
-//       <div> Create New Student </div>
-//       <StudentForm type="create" />
-//     </div>
-//   );
-// };
-// export default newStudent;
-
 import Link from "next/link";
 import { StudentForm } from "../_components/StudentForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 const NewStudentPage = () => {
   return (
-    <div className="flex flex-col gap-5 p-4">
-      <div className="flex items-center flex-col sm:flex-row gap-4 sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Student Management</h1>
-          <p className="text-muted-foreground">
-            Manage students, track statuses and remove when necessary
-          </p>
-        </div>
+    <div className="flex flex-col gap-5 ">
+      <div className="flex items-center justify-between">
+        <Link
+          href="/admin/students"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          <ArrowLeft className="size-4" />
+          <span>Back to Students</span>
+        </Link>
       </div>
 
       <div className="max-w-2xl mx-auto">

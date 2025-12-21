@@ -16,6 +16,7 @@ import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { Pagination } from "./Pagination";
+import { DeleteStudentButton } from "./deleteButton";
 
 function validateSearchParams(searchParams: {
   [key: string]: string | undefined;
@@ -131,7 +132,7 @@ const StudentTable = async ({ resolvedSearchParams }) => {
               <TableCell className="text-center">
                 <div className="flex justify-center gap-2">
                   <Link
-                    href={`/students/${user.id}`}
+                    href={`/admin/students/${user.id}`}
                     className={buttonVariants({
                       variant: "ghost",
                       size: "sm",
@@ -150,10 +151,7 @@ const StudentTable = async ({ resolvedSearchParams }) => {
                     <Pen className="size-4" />
                     <span>Edit</span>
                   </Link>
-                  <Button variant="ghost" size="sm">
-                    <Trash2 className="size-4 text-red-600" />
-                    Delete
-                  </Button>
+                  <DeleteStudentButton studentId={user.id} />
                 </div>
               </TableCell>
             </TableRow>

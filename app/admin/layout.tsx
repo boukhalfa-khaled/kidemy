@@ -10,7 +10,7 @@ const DashboardLayout = ({
       <AppSidebar />
       <main className="w-full bg-background">
         <Navbar />
-        <div className="p-2 sm:p-6">{children}</div>
+        <div className="p-4 sm:p-8">{children}</div>
       </main>
     </SidebarProvider>
   );

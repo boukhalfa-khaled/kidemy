@@ -2,6 +2,9 @@ import prisma from "@/lib/prisma";
 import { StudentForm } from "../../_components/StudentForm";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 const EditStudentPage = async ({
   params,
@@ -26,14 +29,15 @@ const EditStudentPage = async ({
   }
 
   return (
-    <div className="flex flex-col gap-5 p-4">
-      <div className="flex items-center flex-col sm:flex-row gap-4 sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Student Management</h1>
-          <p className="text-muted-foreground">
-            Manage students, track statuses and remove when necessary
-          </p>
-        </div>
+    <div className="flex flex-col gap-5 ">
+      <div className="flex items-center justify-between">
+        <Link
+          href="/admin/students"
+          className={buttonVariants({ variant: "ghost" })}
+        >
+          <ArrowLeft className="size-4" />
+          <span>Back to Students</span>
+        </Link>
       </div>
 
       <div className="max-w-2xl mx-auto">
@@ -44,7 +48,7 @@ const EditStudentPage = async ({
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 md:p-6">
-            <StudentForm user={user} type="create" />
+            <StudentForm user={user} type="update" />
           </CardContent>
         </Card>
       </div>

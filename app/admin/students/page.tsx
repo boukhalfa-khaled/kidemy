@@ -23,7 +23,7 @@ const studentsPage = async ({
   const resolvedSearchParams = await searchParams;
 
   return (
-    <div className="flex flex-col gap-5 p-4">
+    <div className="flex flex-col gap-5 ">
       <div className="flex items-center flex-col sm:flex-row gap-4 sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Student Management</h1>

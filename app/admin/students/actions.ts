@@ -87,65 +87,6 @@ export async function createStudent(formData: unknown) {
   return { success: true };
 }
 
-// export async function updateStudent(userId: string, formData: unknown) {
-//   const parsed = studentFormSchema.safeParse(formData);
-
-//   if (!parsed.success) {
-//     throw new Error("Invalid input");
-//   }
-
-//   const data = parsed.data;
-
-//   const existingUser = await prisma.user.findUnique({
-//     where: { id: userId },
-//     select: { image: true },
-//   });
-
-//   const imageUrl = data.image
-//     ? await saveAvatar(
-//         data.image,
-//         data.firstName,
-//         data.lastName,
-//         existingUser?.image
-//       )
-//     : undefined;
-
-//   const updateData: any = {
-//     firstName: data.firstName,
-//     lastName: data.lastName,
-//     email: data.email,
-//     sex: data.sex,
-//     active: data.active,
-//     role: "STUDENT",
-//   };
-
-//   if (data.password && data.password.length > 0) {
-//     updateData.password = await bcrypt.hash(data.password, 10);
-//   }
-
-//   if (imageUrl) {
-//     updateData.image = imageUrl;
-//   }
-
-//   await prisma.$transaction(async (tx) => {
-//     const user = await tx.user.update({
-//       where: { id: userId },
-//       data: updateData,
-//     });
-
-//     await tx.student.update({
-//       where: { userId: user.id },
-//       data: {
-//         grade: data.grade,
-//         academicYear: data.academicYear,
-//       },
-//     });
-//   });
-
-//   revalidatePath("/dashboard/students");
-
-//   return { success: true };
-// }
 
 export async function updateStudent(userId: string, formData: unknown) {
   const parsed = studentUpdateSchema.safeParse(formData);
@@ -201,4 +142,46 @@ export async function updateStudent(userId: string, formData: unknown) {
 
   revalidatePath("/dashboard/students");
   return { success: true };
+}
+export async function deleteStudent(id: string) {
+  try {
+    const student = await prisma.user.findUnique({
+      where: { id },
+      include: { student: true },
+    });
+
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    if (student.image) {
+      try {
+        const filePath = path.join(process.cwd(), "public", student.image);
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.warn("Failed to delete avatar:", err);
+      }
+    }
+
+    if (student.student) {
+      await prisma.student.delete({
+        where: { userId: id },
+      });
+    }
+
+    await prisma.user.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin/students");
+
+    return { success: true, message: "Student deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to delete student",
+    };
+  }
 }
