@@ -73,7 +73,7 @@ const studentsPage = async ({
             <div className="flex flex-row gap-5">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
-                80 students
+                students
               </div>
             </div>
           </div>

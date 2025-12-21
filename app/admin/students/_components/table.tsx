@@ -141,7 +141,7 @@ const StudentTable = async ({ resolvedSearchParams }) => {
                     <span>View</span>
                   </Link>
                   <Link
-                    href={`/students/edit/${user.id}`}
+                    href={`/admin/students/edit/${user.id}`}
                     className={buttonVariants({
                       variant: "ghost",
                       size: "sm",

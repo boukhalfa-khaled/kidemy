@@ -26,7 +26,7 @@ import {
 import { usePathname } from "next/navigation";
 
 const items = [
-  { title: "Home", url: "/", icon: Home },
+  // { title: "Home", url: "/", icon: Home },
   { title: "Users", url: "/admin/users", icon: User },
   { title: "Students", url: "/admin/students", icon: GraduationCap },
   { title: "Teachers", url: "/admin/teachers", icon: UserCheck },
@@ -59,16 +59,21 @@ const AppSidebar = () => {
 
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <Link href={item.url} passHref>
-                    <SidebarMenuButton isActive={pathname === item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) => {
+                // Check if the current path starts with the item's url
+                const isActive = pathname?.startsWith(item.url);
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <Link href={item.url} passHref>
+                      <SidebarMenuButton isActive={isActive}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

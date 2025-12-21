@@ -32,6 +32,7 @@ model User {
   firstName String
   lastName  String
   email     String   @unique
+  password  String   @default("123123123")
   role      Role     
   sex       Sex
   active    Boolean  @default(false)
@@ -52,6 +53,7 @@ model Student {
   userId    String           @unique
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   grade     String?
+  academicYear String? 
   parents   ParentStudent[]
 
   @@index([userId])
