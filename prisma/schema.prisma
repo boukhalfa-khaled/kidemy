@@ -17,7 +17,7 @@ datasource db {
 enum Role {
   ADMIN
   MODERATOR
-  TEACHER
+  TEACHER 
   STUDENT
   PARENT
 }
@@ -64,6 +64,7 @@ model Teacher {
   id        String   @id @default(cuid())
   userId    String   @unique
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
 
   @@index([userId])
   @@map("teachers")
@@ -89,3 +90,117 @@ model ParentStudent {
   @@unique([parentId, studentId])
   @@map("parent_student")
 }
+
+
+
+
+
+model AcademicYear {
+  id        String @id @default(cuid())
+  name      String // "2024-2025"
+  active    Boolean @default(false)
+  startDate DateTime?
+  endDate   DateTime?
+  createdAt DateTime @default(now())
+
+  grades Grade[]
+  @@unique([name])
+}
+
+
+model Grade {
+  id             String @id @default(cuid())
+  name           String // "First Year", "Second Year", "Third Year", "Fourth Year" ,"fivth year"
+  order          Int    // 1,2,3,4,5
+  createdAt DateTime @default(now())
+  subjects Subject[]
+  terms    Term[]
+  @@unique([name, order])
+}
+
+enum Code {
+  s1
+  s2
+  s3
+  s4
+  s5
+}
+
+model Term {
+  id      String @id @default(cuid())
+  name    String // "الفصل الأول"
+  code    Code 
+  order   Int
+  grade   Grade  @relation(fields: [gradeId], references: [id], onDelete: Cascade)
+  gradeId String
+
+  chapters Chapter[]
+
+  @@unique([gradeId, code])
+}
+
+
+model Subject {
+  id        String @id @default(cuid())
+  name      String
+  code      String? // optional short code
+  createdAt DateTime @default(now())
+
+  gradeId String?
+  grade   Grade? @relation(fields: [gradeId], references: [id], onDelete: SetNull)
+  chapters Chapter[]
+}
+
+
+
+model Chapter {
+  id        String @id @default(cuid())
+  title     String
+  order     Int?
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subjectId String
+  term      Term?   @relation(fields: [termId], references: [id], onDelete: SetNull)
+  termId    String?
+
+  lessons   Lesson[]
+
+  @@index([subjectId])
+}
+
+model Lesson {
+  id        String @id @default(cuid())
+  title     String
+  order     Int?
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+  summary   String?
+  duration  Int? // seconds
+  contents  LessonContent[]
+}
+
+enum ContentType {
+  TEXT
+  VIDEO
+  FILE
+}
+
+
+
+model LessonContent {
+  id         String      @id @default(cuid())
+  lesson     Lesson      @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId   String
+  type       ContentType
+  // flexible fields depending on type:
+  text       String?     // for TEXT
+  url        String?     // for VIDEO or EMBED or FILE link
+  filePath   String?     // optional file path if uploaded server-file
+  meta       Json?       // free-form metadata (duration, captions, mime-type, etc.)
+  order      Int?        // ordering within a lesson
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([lessonId, order])
+}
+
+
